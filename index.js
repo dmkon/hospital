@@ -1,4 +1,4 @@
-var express = require("express");
+//var express = require("express");
 var bodyParser = require("body-parser");
 var SERVER_NAME = 'patients-records-api'
 
@@ -13,34 +13,28 @@ console.log('HOST='+HOST);
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
-//var restify = require('restify')
-//var server = restify.createServer({ name: SERVER_NAME})
+var restify = require('restify')
+var server = restify.createServer({ name: SERVER_NAME})
 //var server = restify.createServer({ name: SERVER_NAME})
 
-var server = express();
+//var server = express();
  //server.set('port', (process.env.PORT || 8000));
- server.use(bodyParser.json());
+ //server.use(bodyParser.json());
  //server.use(express.static(path.join(__dirname, 'public')));
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
-  
 
-  // const server = http.createServer((req, res) => {
-  //   res.statusCode = 200;
-  //   res.setHeader('Content-Type', 'text/plain');
-  //   res.end('Hello World\n');
-  // });
 
   //server.set("port", PORT);
   //server.set("host", HOST);
 
-  server.set("port", PORT);
+  //server.set("port", PORT);
   //server.set("host", process.env.HOST || "localhost");
 
-  //server.listen(PORT, HOST, function () {
-  var app = server.listen(server.get("port"), function() {
-  //console.log('Server %s listening at %s', server.name, server.url)
+  server.listen(PORT, HOST, function () {
+  //var app = server.listen(server.get("port"), function() {
+  console.log('Server %s listening at %s', server.name, server.url)
   //var host = app.address().address;
   //var port = app.address().port;
   console.log('Server %s listening at %s', HOST, PORT)
@@ -71,18 +65,18 @@ var server = express();
   }
 })
 
-// server
-//   // Allow the use of POST
-//   .use(restify.fullResponse())
+server
+  // Allow the use of POST
+  .use(restify.fullResponse())
 
-//   // Maps req.body to req.params so there is no switching between them
-//   .use(restify.bodyParser())
+  // Maps req.body to req.params so there is no switching between them
+  .use(restify.bodyParser())
 
 
 //+/ GET critical
 server.get('/patients/critical', function (req, res, next) {
   console.log('url=' + url);
-  MongoClient.connect(url, {}, function(err, db) {
+  MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("hospital");
     dbo.collection("patients").aggregate([
@@ -105,6 +99,7 @@ server.get('/patients/critical', function (req, res, next) {
       if (err2) throw err2;
       console.log(JSON.stringify(res2));
       res.send(201, res2);
+      //res.status(201).send(res2);
       db.close();
     });
   })
@@ -123,8 +118,8 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
   dbo.collection("patients").find().toArray(function(err,result){
     if(err) throw err;
     console.log(result);
-    //res.send(200, result);
-    res.status(200).send(result);
+    res.send(200, result);
+    //res.status(200).send(result);
     db.close();
   });
  })
@@ -133,7 +128,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
 //+/ Get a single patient by id ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 server.get('/patients/:id', function (req, res, next) {
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name = '_id';
@@ -145,6 +140,7 @@ server.get('/patients/:id', function (req, res, next) {
       if(err) throw err;
       console.log(result);
       res.send(200, result);
+      //res.status(200).send(result);
       db.close();
     });
  })
@@ -154,7 +150,7 @@ server.get('/patients/:id', function (req, res, next) {
 
 server.get('patients/:id/records', function (req, res, next) {
   console.log("Get patient's records by patient id");
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name = 'patient_id';
@@ -166,6 +162,7 @@ server.get('patients/:id/records', function (req, res, next) {
       if(err) throw err;
       console.log(result);
       res.send(result);
+      //res.status(200).send(result);
       db.close();
     });
  })
@@ -175,13 +172,14 @@ server.get('patients/:id/records', function (req, res, next) {
 //+/ Get all records in the system//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 server.get('/records', function (req, res, next) {
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     dbo.collection("records").find().toArray(function(err,result){
       if(err) throw err;
       console.log(result);
       res.send(result);
+      //res.status(200).send(result);
       db.close();
     });
    })
@@ -192,41 +190,69 @@ server.get('/records', function (req, res, next) {
 
  server.post('/patients', function (req, res, next) {
 console.log("1");
+console.log(req.params.firstName);
   if (req.params.firstName === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('firstName must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('firstName must be supplied')
+      //server.InvalidArgumentError('firstName must be supplied')
+      )
   }
   if (req.params.lastName === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('lastName must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('lastName must be supplied')
+      //new server.InvalidArgumentError('lastName must be supplied')
+      )
   }
   if (req.params.dateOfBirth === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('dateOfBirth must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('dateOfBirth must be supplied')
+      //new server.InvalidArgumentError('dateOfBirth must be supplied')
+      )
   }
   if (req.params.gender === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('gender must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('gender must be supplied')
+      //new server.InvalidArgumentError('gender must be supplied')
+      )
   }
   if (req.params.address === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('address must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('address must be supplied')
+      //new server.InvalidArgumentError('address must be supplied')
+      )
   }
   if (req.params.city === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('city must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('city must be supplied')
+      //new server.InvalidArgumentError('city must be supplied')
+      )
   }
   if (req.params.province === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('province must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('province must be supplied')
+      //new server.InvalidArgumentError('province must be supplied')
+      )
   }
   if (req.params.postalCode === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('postalCode must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('postalCode must be supplied')
+      //new server.InvalidArgumentError('postalCode must be supplied')
+      )
   }
   if (req.params.doctor === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('doctor must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('doctor must be supplied')
+      //new server.InvalidArgumentError('doctor must be supplied')
+      )
   }
   var newPatient = {
     //patient_id: req.params.patient_id,
@@ -241,13 +267,14 @@ console.log("1");
     doctor: req.params.doctor
 	}
   var newPatientJSON = JSON.stringify(newPatient);
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     dbo.collection("patients").insertOne(newPatient, function(err, res2) {
       if (err) throw err;
       console.log(newPatientJSON);
         res.send(201, newPatient);
+        //res.status(201).send(newPatient);
         db.close();
     });
    })
@@ -260,23 +287,38 @@ server.post('/patients/:id/recordType/:recordType', function (req, res, next) {
   //Make sure name is defined
   if (req.params.id === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('patient id must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('patient id must be supplied')
+      //new server.InvalidArgumentError('patient id must be supplied')
+      )
   }
   if (req.params.recordType === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordType must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('recordType must be supplied')
+      //new server.InvalidArgumentError('recordType must be supplied')
+      )
   }
   if (req.params.recordValue === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordValue must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('recordValue must be supplied')
+      //new server.InvalidArgumentError('recordValue must be supplied')
+      )
   }
   if (req.params.recordUom === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordUom must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('recordUom must be supplied')
+      //new server.InvalidArgumentError('recordUom must be supplied')
+      )
   }
   if (req.params.isCritical === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('isCritical must be supplied'))
+    return next(
+      new restify.InvalidArgumentError('isCritical must be supplied')
+      //new server.InvalidArgumentError('isCritical must be supplied')
+      )
   }
 
   var newRecord = {
@@ -289,7 +331,7 @@ server.post('/patients/:id/recordType/:recordType', function (req, res, next) {
 
   var newRecordJSON = JSON.stringify(newRecord);
   console.log(newRecordJSON);
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     dbo.collection("records").insertOne(newRecord, function(err, res2) {
@@ -314,6 +356,7 @@ server.post('/patients/:id/recordType/:recordType', function (req, res, next) {
         if(err) throw err;
         console.log(result);
         res.send(201, result);
+        //res.status(201).send(result);
         db.close();
       });
     });
@@ -322,9 +365,9 @@ server.post('/patients/:id/recordType/:recordType', function (req, res, next) {
 
 //+/ Delete all patients and their records //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.delete('/patients/all', function (req, res, next) {
+server.del('/patients/all', function (req, res, next) {
   console.log("patients/all");
-    MongoClient.connect(url, function(err,db){
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
       if(err) throw err;
       var dbo = db.db("hospital");
   
@@ -335,6 +378,7 @@ server.delete('/patients/all', function (req, res, next) {
           if (err) throw err;
           console.log("records deleted");
           res.send(201, "deleted")
+          //res.status(201).send("deleted");
           db.close();
         });
       });
@@ -342,8 +386,8 @@ server.delete('/patients/all', function (req, res, next) {
   })
 //+/ Delete patient's records by patient id and record type//////////////////////////////////////////////////////////////////////////////////////
 // Delete all Blood Pressure or all Respiratory Rate ...
-server.delete('/patients/:id/recordType/:recordType', function (req, res, next) {
-  MongoClient.connect(url, function(err,db){
+server.del('/patients/:id/recordType/:recordType', function (req, res, next) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name1 = 'patient_id';
@@ -357,6 +401,7 @@ server.delete('/patients/:id/recordType/:recordType', function (req, res, next) 
       if (err) throw err;
       console.log("record deleted");
       res.send(201, "deleted")
+      //res.status(201).send("deleted");
       db.close();
     });
    })
@@ -365,8 +410,8 @@ server.delete('/patients/:id/recordType/:recordType', function (req, res, next) 
 
 // Delete a single patient by patient id //////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.delete('/patients/:id', function (req, res, next) {
-  MongoClient.connect(url, function(err,db){
+server.del('/patients/:id', function (req, res, next) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name = '_id';
@@ -377,6 +422,7 @@ server.delete('/patients/:id', function (req, res, next) {
       if (err) throw err;
       console.log("patient deleted");
       res.send(201, "patient deleted")
+      //res.status(201).send("patient deleted");
       db.close();
     });
    })
@@ -384,9 +430,9 @@ server.delete('/patients/:id', function (req, res, next) {
 
 //+/ Delete patient's records by patient id /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.delete('/patients/:id/records', function (req, res, next) {
+server.del('/patients/:id/records', function (req, res, next) {
   console.log("START DELETE");
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name = 'patient_id';
@@ -398,6 +444,7 @@ server.delete('/patients/:id/records', function (req, res, next) {
       if (err) throw err;
       console.log("records deleted");
       res.send(201, "deleted")
+      //res.status(201).send("deleted");
       db.close();
     });
    })
@@ -405,9 +452,9 @@ server.delete('/patients/:id/records', function (req, res, next) {
 
 //+/ Delete single record by record id /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.delete('/records/:id', function (req, res, next) {
+server.del('/records/:id', function (req, res, next) {
   console.log("START DELETE");
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var name = '_id';
@@ -419,6 +466,7 @@ server.delete('/records/:id', function (req, res, next) {
       if (err) throw err;
       console.log("record deleted");
       res.send(201, "deleted")
+      //res.status(201).send("deleted");
       db.close();
     });
    })
@@ -429,39 +477,66 @@ server.put('/patients/:id', function (req, res, next) {
 
 if (req.params.firstName === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('firstName must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('firstName must be supplied')
+    //new server.InvalidArgumentError('firstName must be supplied')
+    )
 }
 if (req.params.lastName === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('lastName must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('lastName must be supplied')
+    //new server.InvalidArgumentError('lastName must be supplied')
+    )
 }
 if (req.params.dateOfBirth === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('dateOfBirth must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('dateOfBirth must be supplied')
+    //new server.InvalidArgumentError('dateOfBirth must be supplied')
+    )
 }
 if (req.params.gender === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('gender must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('gender must be supplied')
+    //new server.InvalidArgumentError('gender must be supplied')
+    )
 }
 if (req.params.address === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('address must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('address must be supplied')
+    //new server.InvalidArgumentError('address must be supplied')
+    )
 }
 if (req.params.city === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('city must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('city must be supplied')
+    //new server.InvalidArgumentError('city must be supplied')
+    )
 }
 if (req.params.province === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('province must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('province must be supplied')
+    //new server.InvalidArgumentError('province must be supplied')
+    )
 }
 if (req.params.postalCode === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('postalCode must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('postalCode must be supplied')
+    //new server.InvalidArgumentError('postalCode must be supplied')
+    )
 }
 if (req.params.doctor === undefined ) {
   // If there are any errors, pass them to next in the correct format
-  return next(new restify.InvalidArgumentError('doctor must be supplied'))
+  return next(
+    new restify.InvalidArgumentError('doctor must be supplied')
+    //new server.InvalidArgumentError('doctor must be supplied')
+    )
 }
 var newPatient = {
   //patient_id: req.params.patient_id,
@@ -476,7 +551,7 @@ var newPatient = {
   doctor: req.params.doctor
 }
 //var newPatientJSON = JSON.stringify(newPatient);
-MongoClient.connect(url, function(err,db){
+MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
   if(err) throw err;
   var dbo = db.db("hospital");
   //var myquery = { patient_id: req.params.patient_id };
@@ -489,6 +564,7 @@ MongoClient.connect(url, function(err,db){
     console.log("patient updated");
     console.log(newPatient);
     res.send(201, newPatient);
+    //res.status(201).send(newPatient);
     db.close();
   });
  })
@@ -509,19 +585,31 @@ console.log("record update");
   // }
   if (req.params.recordType === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordType must be supplied'))
+    return next(
+      //new restify.InvalidArgumentError('recordType must be supplied')
+      new server.InvalidArgumentError('recordType must be supplied')
+      )
   }
   if (req.params.recordValue === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordValue must be supplied'))
+    return next(
+      //new restify.InvalidArgumentError('recordValue must be supplied')
+      new server.InvalidArgumentError('recordValue must be supplied')
+      )
   }
   if (req.params.recordUom === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('recordUom must be supplied'))
+    return next(
+      //new restify.InvalidArgumentError('recordUom must be supplied')
+      new server.InvalidArgumentError('recordUom must be supplied')
+      )
   }
   if (req.params.isCritical === undefined ) {
     // If there are any errors, pass them to next in the correct format
-    return next(new restify.InvalidArgumentError('isCritical must be supplied'))
+    return next(
+      //new restify.InvalidArgumentError('isCritical must be supplied')
+      new server.InvalidArgumentError('isCritical must be supplied')
+      )
   }
 
   var newRecord = {
@@ -532,7 +620,7 @@ console.log("record update");
     isCritical: Boolean(req.params.isCritical=='true')
 	}
   //var newPatientJSON = JSON.stringify(newPatient);
-  MongoClient.connect(url, function(err,db){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
     var myquery = { _id: ObjectId(req.params.id) };
@@ -542,6 +630,7 @@ console.log("record update");
       console.log("record updated");
       console.log(newRecord);
       res.send(201, newRecord);
+      //res.status(201).send(newRecord);
       db.close();
     });
    })
