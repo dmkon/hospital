@@ -24,7 +24,7 @@ var restify = require('restify')
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
 
-  //server.set("port", process.env.PORT || 3000);
+  server.set("port", process.env.PORT || 3000);
   //server.set("host", process.env.HOST || "localhost");
 
   server.set("port", PORT);
