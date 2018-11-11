@@ -122,17 +122,18 @@ server.get('/patients/critical', function (req, res, next) {
 
 server.get('/patients', function (req, res, next) {
   console.log("START " + url);
-MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
-  if(err) throw err;
-  var dbo = db.db("hospital");
-  dbo.collection("patients").find().toArray(function(err,result){
-    if(err) throw err;
-    console.log(result);
-    //res.send(200, result);
-    res.status(200).send(result);
-    db.close();
-  });
- })
+  res.status(200).send("OK");
+// MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
+//   if(err) throw err;
+//   var dbo = db.db("hospital");
+//   dbo.collection("patients").find().toArray(function(err,result){
+//     if(err) throw err;
+//     console.log(result);
+//     //res.send(200, result);
+//     res.status(200).send(result);
+//     db.close();
+//   });
+//  })
 })
 
 //+/ Get a single patient by id ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
