@@ -90,7 +90,7 @@ var server = express();
 //+/ GET critical
 server.get('/patients/critical', function (req, res, next) {
   console.log('url=' + url);
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url, {}, function(err, db) {
     if (err) throw err;
     var dbo = db.db("hospital");
     dbo.collection("patients").aggregate([
