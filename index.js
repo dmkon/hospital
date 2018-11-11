@@ -89,7 +89,7 @@ var server = express();
 
 //+/ GET critical
 server.get('/patients/critical', function (req, res, next) {
-  console.log('Start');
+  console.log('url=' + url);
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("hospital");
@@ -121,19 +121,19 @@ server.get('/patients/critical', function (req, res, next) {
 //+/ Get all patients in the system/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 server.get('/patients', function (req, res, next) {
-  console.log("START " + url);
-  res.status(200).send("OK");
-// MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
-//   if(err) throw err;
-//   var dbo = db.db("hospital");
-//   dbo.collection("patients").find().toArray(function(err,result){
-//     if(err) throw err;
-//     console.log(result);
-//     //res.send(200, result);
-//     res.status(200).send(result);
-//     db.close();
-//   });
-//  })
+  console.log('url=' + url);
+  //res.status(200).send("OK");
+MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
+  if(err) throw err;
+  var dbo = db.db("hospital");
+  dbo.collection("patients").find().toArray(function(err,result){
+    if(err) throw err;
+    console.log(result);
+    //res.send(200, result);
+    res.status(200).send(result);
+    db.close();
+  });
+ })
 })
 
 //+/ Get a single patient by id ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
