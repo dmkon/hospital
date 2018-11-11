@@ -1,9 +1,9 @@
 //const http = require('http');
 var express = require("express");
+var path = require('path');
 var bodyParser = require("body-parser");
 
- var server = express();
- server.use(bodyParser.json());
+ 
 
 var SERVER_NAME = 'patients-records-api'
 var PORT = 8000;
@@ -23,6 +23,10 @@ var ObjectId = require('mongodb').ObjectId;
 var restify = require('restify')
 //var server = restify.createServer({ name: SERVER_NAME})
 //var server = restify.createServer({ name: SERVER_NAME})
+
+var server = express();
+ server.set('port', (process.env.PORT || PORT));
+ server.use(bodyParser.json());
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
