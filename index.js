@@ -41,9 +41,9 @@ var server = express();
   //server.listen(PORT, HOST, function () {
   var app = server.listen(server.get("port"), function() {
   //console.log('Server %s listening at %s', server.name, server.url)
-  var host = app.address().address;
-  var port = app.address().port;
-  console.log('Server %s listening at %s', host, port)
+  //var host = app.address().address;
+  //var port = app.address().port;
+  console.log('Server %s listening at %s', HOST, PORT)
   console.log('Resources:')
   // console.log('http://127.0.0.1:8000/patients')
   // console.log('http://127.0.0.1:8000/records')
