@@ -24,8 +24,14 @@ var restify = require('restify')
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
 
+  //server.set("port", process.env.PORT || 3000);
+  //server.set("host", process.env.HOST || "localhost");
+
+  server.set("port", PORT);
+  server.set("host", HOST);
+
   //server.listen(PORT, HOST, function () {
-  var app = server.listen(PORT, HOST, function() {
+  var app = server.listen(server.get("port"), server.get("host"), function() {
   //console.log('Server %s listening at %s', server.name, server.url)
   var host = app.address().address;
   var port = app.address().port;
