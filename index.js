@@ -27,7 +27,9 @@ var restify = require('restify')
   //server.listen(PORT, HOST, function () {
   var app = server.listen(PORT, HOST, function() {
   //console.log('Server %s listening at %s', server.name, server.url)
-  console.log('Server %s listening at %s', app.address().address, app.address().port)
+  var host = app.address().address;
+  var port = app.address().port;
+  console.log('Server %s listening at %s', host, port)
   console.log('Resources:')
   // console.log('http://127.0.0.1:8000/patients')
   // console.log('http://127.0.0.1:8000/records')
