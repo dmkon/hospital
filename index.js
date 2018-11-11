@@ -1,6 +1,7 @@
 //const http = require('http');
 var express = require("express");
 var path = require('path');
+console.log('PATH='+path.join(__dirname, 'public'));
 var bodyParser = require("body-parser");
 
  
@@ -27,7 +28,7 @@ var restify = require('restify')
 var server = express();
  server.set('port', (process.env.PORT || PORT));
  server.use(bodyParser.json());
- server.use(express.static(path.join(__dirname, 'public')));
+ //server.use(express.static(path.join(__dirname, 'public')));
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
@@ -42,11 +43,11 @@ var server = express();
   //server.set("port", PORT);
   //server.set("host", HOST);
 
-  //server.set("port", process.env.PORT || 3000);
-  //server.set("host", process.env.HOST || "localhost");
+  server.set("port", process.env.PORT || PORT);
+  server.set("host", process.env.HOST || "localhost");
 
   //server.listen(PORT, HOST, function () {
-  var app = server.listen(server.get("port"), function() {
+  var app = server.listen(server.get("port"),server.get("host"), function() {
   //console.log('Server %s listening at %s', server.name, server.url)
   var host = app.address().address;
   var port = server.get("port");
