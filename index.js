@@ -122,7 +122,8 @@ MongoClient.connect(url, function(err,db){
   dbo.collection("patients").find().toArray(function(err,result){
     if(err) throw err;
     console.log(result);
-    res.send(200, result);
+    //res.send(200, result);
+    res.status(200).send(body)
     db.close();
   });
  })
