@@ -27,6 +27,7 @@ var restify = require('restify')
 var server = express();
  server.set('port', (process.env.PORT || PORT));
  server.use(bodyParser.json());
+ server.use(express.static(path.join(__dirname, 'public')));
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
@@ -45,10 +46,10 @@ var server = express();
   //server.set("host", process.env.HOST || "localhost");
 
   //server.listen(PORT, HOST, function () {
-  var app = server.listen(PORT, HOST, function() {
+  var app = server.listen(server.get("port"), function() {
   //console.log('Server %s listening at %s', server.name, server.url)
   var host = app.address().address;
-  var port = app.address().port;
+  var port = server.get("port");
   console.log('Server %s listening at %s', host, port)
   console.log('Resources:')
   // console.log('http://127.0.0.1:8000/patients')
