@@ -127,6 +127,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
   console.log('connected');
   if(err) throw err;
   var dbo = db.db("hospital");
+  console.log('before query');
   dbo.collection("patients").find().toArray(function(err,result){
     if(err) throw err;
     console.log(result);
