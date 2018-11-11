@@ -310,7 +310,7 @@ server.post('/patients/:id/recordType/:recordType', function (req, res, next) {
 
 //+/ Delete all patients and their records //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.del('/patients/all', function (req, res, next) {
+server.delete('/patients/all', function (req, res, next) {
   console.log("patients/all");
     MongoClient.connect(url, function(err,db){
       if(err) throw err;
@@ -330,7 +330,7 @@ server.del('/patients/all', function (req, res, next) {
   })
 //+/ Delete patient's records by patient id and record type//////////////////////////////////////////////////////////////////////////////////////
 // Delete all Blood Pressure or all Respiratory Rate ...
-server.del('/patients/:id/recordType/:recordType', function (req, res, next) {
+server.delete('/patients/:id/recordType/:recordType', function (req, res, next) {
   MongoClient.connect(url, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
@@ -353,7 +353,7 @@ server.del('/patients/:id/recordType/:recordType', function (req, res, next) {
 
 // Delete a single patient by patient id //////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.del('/patients/:id', function (req, res, next) {
+server.delete('/patients/:id', function (req, res, next) {
   MongoClient.connect(url, function(err,db){
     if(err) throw err;
     var dbo = db.db("hospital");
@@ -372,7 +372,7 @@ server.del('/patients/:id', function (req, res, next) {
 
 //+/ Delete patient's records by patient id /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.del('/patients/:id/records', function (req, res, next) {
+server.delete('/patients/:id/records', function (req, res, next) {
   console.log("START DELETE");
   MongoClient.connect(url, function(err,db){
     if(err) throw err;
@@ -393,7 +393,7 @@ server.del('/patients/:id/records', function (req, res, next) {
 
 //+/ Delete single record by record id /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-server.del('/records/:id', function (req, res, next) {
+server.delete('/records/:id', function (req, res, next) {
   console.log("START DELETE");
   MongoClient.connect(url, function(err,db){
     if(err) throw err;
