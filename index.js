@@ -1,32 +1,24 @@
-//const http = require('http');
 var express = require("express");
-var path = require('path');
-console.log('PATH='+path.join(__dirname, 'public'));
 var bodyParser = require("body-parser");
-
- 
-
 var SERVER_NAME = 'patients-records-api'
-var PORT = 8000;
-if (process.env.PORT != null) {
-  PORT = process.env.PORT;
-}
+
+var PORT = process.env.PORT || 8000;
 console.log('PORT='+PORT);
 
-
-var HOST = '127.0.0.1'
-if (process.env.HOST_NAME != null) {
-  HOST = process.env.HOST_NAME
-}
+var HOST = process.env.HOST || '127.0.0.1' ;
+// if (process.env.HOST_NAME != null) {
+//   HOST = process.env.HOST_NAME
+// }
 console.log('HOST='+HOST);
+
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
-var restify = require('restify')
+//var restify = require('restify')
 //var server = restify.createServer({ name: SERVER_NAME})
 //var server = restify.createServer({ name: SERVER_NAME})
 
 var server = express();
- server.set('port', (process.env.PORT || PORT));
+ //server.set('port', (process.env.PORT || 8000));
  server.use(bodyParser.json());
  //server.use(express.static(path.join(__dirname, 'public')));
 
@@ -43,8 +35,8 @@ var server = express();
   //server.set("port", PORT);
   //server.set("host", HOST);
 
-  server.set("port", process.env.PORT || PORT);
-  server.set("host", process.env.HOST || "localhost");
+  server.set("port", PORT);
+  //server.set("host", process.env.HOST || "localhost");
 
   //server.listen(PORT, HOST, function () {
   var app = server.listen(server.get("port"), function() {
