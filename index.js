@@ -1,8 +1,9 @@
+//const http = require('http');
 var express = require("express");
 var bodyParser = require("body-parser");
 
-var server = express();
-server.use(bodyParser.json());
+ var server = express();
+ server.use(bodyParser.json());
 
 var SERVER_NAME = 'patients-records-api'
 var PORT = 8000;
@@ -23,15 +24,22 @@ var restify = require('restify')
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
+  
 
-  server.set("port", process.env.PORT || 3000);
+  // const server = http.createServer((req, res) => {
+  //   res.statusCode = 200;
+  //   res.setHeader('Content-Type', 'text/plain');
+  //   res.end('Hello World\n');
+  // });
+
+  //server.set("port", PORT);
+  //server.set("host", HOST);
+
+  //server.set("port", process.env.PORT || 3000);
   //server.set("host", process.env.HOST || "localhost");
 
-  server.set("port", PORT);
-  server.set("host", HOST);
-
   //server.listen(PORT, HOST, function () {
-  var app = server.listen(server.get("port"), function() {
+  var app = server.listen(PORT, HOST, function() {
   //console.log('Server %s listening at %s', server.name, server.url)
   var host = app.address().address;
   var port = app.address().port;
