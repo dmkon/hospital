@@ -122,7 +122,7 @@ server.get('/patients/critical', function (req, res, next) {
 
 server.get('/patients', function (req, res, next) {
   console.log("START " + url);
-MongoClient.connect(url, function(err,db){
+MongoClient.connect(url, { useNewUrlParser: true }, function(err,db){
   if(err) throw err;
   var dbo = db.db("hospital");
   dbo.collection("patients").find().toArray(function(err,result){
