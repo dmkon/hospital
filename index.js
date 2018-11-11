@@ -3,6 +3,7 @@ var PORT = 8000;
 if (process.env.PORT != null) {
   PORT = process.env.PORT;
 }
+console.log('PORT='+PORT);
 var HOST = '127.0.0.1'
 if (process.env.HOST_NAME != null) {
   HOST = 'https://'+process.env.HOST_NAME
