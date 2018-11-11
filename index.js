@@ -1,3 +1,9 @@
+var express = require("express");
+var bodyParser = require("body-parser");
+
+var server = express();
+server.use(bodyParser.json());
+
 var SERVER_NAME = 'patients-records-api'
 var PORT = 8000;
 if (process.env.PORT != null) {
@@ -12,13 +18,16 @@ console.log('HOST='+HOST);
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var restify = require('restify')
-  , server = restify.createServer({ name: SERVER_NAME})
+//var server = restify.createServer({ name: SERVER_NAME})
+//var server = restify.createServer({ name: SERVER_NAME})
 
   var url = process.env.MONGOLAB_URI_HOSPITAL;  
   console.log('MONGOLAB_URI_HOSPITAL='+url);
 
-  server.listen(PORT, HOST, function () {
-  console.log('Server %s listening at %s', server.name, server.url)
+  //server.listen(PORT, HOST, function () {
+  var app = server.listen(PORT, HOST, function() {
+  //console.log('Server %s listening at %s', server.name, server.url)
+  console.log('Server %s listening at %s', app.address().address, app.address().port)
   console.log('Resources:')
   // console.log('http://127.0.0.1:8000/patients')
   // console.log('http://127.0.0.1:8000/records')
@@ -46,12 +55,12 @@ var restify = require('restify')
   }
 })
 
-server
-  // Allow the use of POST
-  .use(restify.fullResponse())
+// server
+//   // Allow the use of POST
+//   .use(restify.fullResponse())
 
-  // Maps req.body to req.params so there is no switching between them
-  .use(restify.bodyParser())
+//   // Maps req.body to req.params so there is no switching between them
+//   .use(restify.bodyParser())
 
 
 //+/ GET critical

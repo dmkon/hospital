@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "REST API - Patients",
     "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
         "mongodb": "^3.1.8",
         "restify": "4.1.1",
         "save": "2.3.0"
