@@ -31,7 +31,7 @@ var restify = require('restify')
   server.set("host", HOST);
 
   //server.listen(PORT, HOST, function () {
-  var app = server.listen(server.get("port"), server.get("host"), function() {
+  var app = server.listen(server.get("port"), function() {
   //console.log('Server %s listening at %s', server.name, server.url)
   var host = app.address().address;
   var port = app.address().port;
