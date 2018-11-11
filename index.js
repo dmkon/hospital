@@ -123,7 +123,7 @@ MongoClient.connect(url, function(err,db){
     if(err) throw err;
     console.log(result);
     //res.send(200, result);
-    res.status(200).send(body)
+    res.status(200).send(result);
     db.close();
   });
  })
