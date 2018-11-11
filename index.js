@@ -12,7 +12,7 @@ if (process.env.PORT != null) {
 console.log('PORT='+PORT);
 var HOST = '127.0.0.1'
 if (process.env.HOST_NAME != null) {
-  HOST = process.env.HOST_NAME
+  HOST = 'https://'+process.env.HOST_NAME
 }
 console.log('HOST='+HOST);
 var MongoClient = require('mongodb').MongoClient;
